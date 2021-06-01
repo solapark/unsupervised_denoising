@@ -1,0 +1,18 @@
+1.  Large scale training
+A.  python generate_TFRecord.py --labelpath [Path to HQ images] --datapath [Path to LQ images] --tfrecord [TFRecord file path]
+i.  python generate_TFRecord.py --labelpath ../../../shared_code/dataset/CDSEM_FI_15_42_TRAIN/HQ --datapath ../../../shared_code/dataset/CDSEM_FI_15_42_TRAIN/LQ/X1 --tfrecord train_FI_X1
+
+B.  python main.py --gpu [GPU_number] --trial [Trial of your training] --step [Global step]
+i.  python main.py ?-gpu 0 ?-trial 0 ?-step 0
+
+
+2.  Meta Training
+A.  python generate_TFRecord_MZSR.py --labelpath [Path to label images] --tfrecord [TFRecord file path]
+i.  python generate_TFRecord_MZSR.py --labelpath ../../shared_code/dataset/CDSEM_DI_15_128_DI2_15_128_TRAIN/LQ/X1 -- --tfrecord train_DI_LQ
+B.  python main.py --train --gpu [GPU_number] --trial [Trial of your training] --step [Global step]
+i.  python main.py --train ?-gpu 0 ?-trial 0 -?step 0
+
+3.  Meta Test
+A.  python main.py --gpu [GPU_number] --inputpath [LQ path] --gtpath [HQ path] --savepath [result path] --num [1/10]
+i.  python main.py --gpu 0 --inputpath ../../shared_code/dataset/CDSEM_TEST/CDSEM_DI_15_128_DI2_15_128_TEST/LQ/X1 --gtpath ../../shared_code/dataset/CDSEM_TEST/CDSEM_DI_15_128_DI2_15_128_TEST/HQ --savepath results --num 1
+

@@ -206,14 +206,14 @@ class Test(object):
 
 
 #        size_data = self.size_data
-        size_data = input.shape[:2]
+        size_data = input.shape
         num_sample = int(size_data[0] * size_data[1] * (1 - ratio))
 
         mask = np.ones(size_data)
         output = input
 
-#        for ich in range(size_data[2]):
-        for ich in range(1):
+        for ich in range(size_data[2]):
+#        for ich in range(1):
             idy_msk = np.random.randint(0, size_data[0], num_sample)
             idx_msk = np.random.randint(0, size_data[1], num_sample)
 
@@ -230,16 +230,16 @@ class Test(object):
             idx_msk_neigh = idx_msk_neigh + (idx_msk_neigh < 0) * size_data[1] - (idx_msk_neigh >= size_data[1]) * \
                             size_data[1]
 
-#            id_msk = (idy_msk, idx_msk, ich)
-#            id_msk_neigh = (idy_msk_neigh, idx_msk_neigh, ich)
+            id_msk = (idy_msk, idx_msk, ich)
+            id_msk_neigh = (idy_msk_neigh, idx_msk_neigh, ich)
 
-            id_msk = (idy_msk, idx_msk)
-            id_msk_neigh = (idy_msk_neigh, idx_msk_neigh)
+#            id_msk = (idy_msk, idx_msk)
+#            id_msk_neigh = (idy_msk_neigh, idx_msk_neigh)
 
             output[id_msk] = input[id_msk_neigh]
             mask[id_msk] = 0.0
 			 ######################################
-        mask=np.stack((mask,)*3,axis=-1)
+#        mask=np.stack((mask,)*3,axis=-1)
 #############################################
         return output, mask
 

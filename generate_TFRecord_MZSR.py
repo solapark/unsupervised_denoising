@@ -62,14 +62,17 @@ def generate_TFRecord(label_path,tfrecord_file,patch_h,patch_w,stride):
         print('[*] Image number: %d/%d' % ((n+1), fileNum))
         label=imread(label_list[n])
 
-        x, y, ch = label.shape
-        for m in range(8):
-            for i in range(0+offset,x-patch_h+1,stride):
-                for j in range(0+offset,y-patch_w+1,stride):
-                    patch_l = label[i:i + patch_h, j:j + patch_w]
+        x, y, ch = label.shape 
+        print(x,y)
 
-                    if np.log(gradients(patch_l.astype(np.float64)/255.)+1e-10) >= -6.0:
-                        labels.append(augmentation(patch_l,m).tobytes())
+        for m in range(8):
+#            for i in range(0+offset,x-patch_h+1,stride):
+#                for j in range(0+offset,y-patch_w+1,stride):
+                    patch_l = label[0:patch_h, 0: patch_w]
+#                    patch_l = label[i:i + patch_h, j:j + patch_w]								
+                    labels.append(augmentation(patch_l,m).tobytes())
+#                    if np.log(gradients(patch_l.astype(np.float64)/255.)+1e-10) >= -6.0:
+#                        labels.append(augmentation(patch_l,m).tobytes())
 
     np.random.shuffle(labels)
     print('Num of patches:', len(labels))
@@ -91,7 +94,6 @@ if __name__=='__main__':
 
     labelpath=os.path.join(options.labelpath, '*.png')
     tfrecord_file = options.tfrecord + '.tfrecord'
-
     generate_TFRecord(labelpath, tfrecord_file,512,512,120)
     print('Done')
 

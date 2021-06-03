@@ -57,6 +57,7 @@ def generate_TFRecord(label_path,tfrecord_file,patch_h,patch_w,stride):
         sizeN = noise.shape
         noise = torch.FloatTensor(sizeN).normal_(mean=0,std=stdN/255.)
         img = label + noise.numpy()
+        img = img.astype(np.uint8)
         print("img shape: {0}, noise.numpy() shape: {1}".format(img.shape,noise.numpy().shape))
 #        assert os.path.basename(img_list[n])[:-6] == os.path.basename(label_list[n])[:-4]
 

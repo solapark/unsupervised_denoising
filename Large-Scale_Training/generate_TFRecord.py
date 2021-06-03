@@ -3,6 +3,10 @@ import os
 import glob
 import numpy as np
 import tensorflow as tf
+import torch
+import torch.nn as nn
+import torch.optim as optim
+
 from argparse import ArgumentParser
 
 def imread(path):
@@ -33,9 +37,9 @@ def write_to_tfrecord(writer, label, image):
     writer.write(example.SerializeToString())
     return
 
-def generate_TFRecord(data_path,label_path,tfrecord_file,patch_h,patch_w,stride):
+def generate_TFRecord(label_path,tfrecord_file,patch_h,patch_w,stride):
     label_list=np.sort(np.asarray(glob.glob(label_path)))
-    img_list = np.sort(np.asarray(glob.glob(data_path)))
+    #img_list = np.sort(np.asarray(glob.glob(data_path)))
 
     offset=0
 
@@ -43,12 +47,17 @@ def generate_TFRecord(data_path,label_path,tfrecord_file,patch_h,patch_w,stride)
 
     patches=[]
     labels=[]
-
+    #batch_size=1
     for n in range(fileNum):
         print('[*] Image number: %d/%d' % ((n+1), fileNum))
-        img=imread(img_list[n])
-        label=imread(label_list[n])
-
+        #img=imread(img_list[n])
+        label=imread(label_list[n]) # 3D tensor [H:W:C]
+        noise = torch.zeros(label.shape)
+        stdN = np.random.uniform(0, 55, 1).squeeze(-1) # third parameter means batch size (num of images)
+        sizeN = noise.shape
+        noise = torch.FloatTensor(sizeN).normal_(mean=0,std=stdN/255.)
+        img = label + noise.numpy()
+        print("img shape: {0}, noise.numpy() shape: {1}".format(img.shape,noise.numpy().shape))
 #        assert os.path.basename(img_list[n])[:-6] == os.path.basename(label_list[n])[:-4]
 
 #        img=modcrop(img,scale)
@@ -83,16 +92,16 @@ if __name__=='__main__':
     parser=ArgumentParser()
 
     parser.add_argument('--labelpath', dest='labelpath', help='Path to HQ images ')
-    parser.add_argument('--datapath', dest='datapath', help='Path to LQ images ')
+    #parser.add_argument('--datapath', dest='datapath', help='Path to LQ images ')
     parser.add_argument('--tfrecord', dest='tfrecord', help='Save path for tfrecord file', default='train_X1')
     options=parser.parse_args()
 
 #    scale = options.scale
     labelpath=os.path.join(options.labelpath, '*.png')
-    datapath=os.path.join(options.datapath, '*.png')
+    #datapath=os.path.join(options.datapath, '*.png')
 
     tfrecord_file = options.tfrecord + '.tfrecord'
 
-    generate_TFRecord(datapath, labelpath, tfrecord_file,96,96,120)
+    generate_TFRecord(labelpath, tfrecord_file,96,96,120)
     print('Done')
 

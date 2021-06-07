@@ -1,5 +1,5 @@
-#import model
-import Unet
+import model
+#import Unet
 import time
 import imageio
 from utils import *
@@ -31,11 +31,14 @@ class Test(object):
         self.label = tf.placeholder(tf.float32, shape=[None,None,None,3],  name='label')
         self.mask = tf.placeholder(tf.float32, shape=[None, None, None, 3], name='mask')
         # parameter variables
-        self.PARAM=Unet.Weights(scope='Unet')
+        #self.PARAM=Unet.Weights(scope='Unet')
+        self.PARAM=model.Weights(scope='MODEL')
         # model class (without feedforward graph)
-        self.MODEL = Unet.Unet(name='Unet')
+        #self.MODEL = Unet.Unet(name='Unet')
+        self.MODEL = model.MODEL(name='MODEL')
         # Graph build
-        self.MODEL.forward(self.input,self.PARAM.weights,1,512,512)
+        #self.MODEL.forward(self.input,self.PARAM.weights,1,512,512)
+        self.MODEL.forward(self.input,self.PARAM.weights)
         self.output=self.MODEL.output
 
         self.loss_t = tf.losses.absolute_difference(self.label*(1-self.mask), self.output*(1-self.mask))
@@ -45,7 +48,8 @@ class Test(object):
         self.init = tf.global_variables_initializer()
 
         # Variable lists
-        self.var_list= tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='Unet')
+        #self.var_list= tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='Unet')
+        self.var_list= tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='MODEL')
 
         self.loader=tf.train.Saver(var_list=self.var_list)
 

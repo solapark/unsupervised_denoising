@@ -1,6 +1,6 @@
 from utils import *
-#import model
-import Unet
+import model
+#import Unet
 import time
 from config import *
 
@@ -38,10 +38,12 @@ class Train(object):
         self.maskb = tf.placeholder(dtype=tf.float32,shape=[self.META_BATCH_SIZE, self.TASK_BATCH_SIZE, self.HEIGHT, self.WIDTH, self.CHANNEL])
 
         '''model'''
-        self.PARAM=Unet.Weights(scope='Unet')
+        #self.PARAM=Unet.Weights(scope='Unet')
+        self.PARAM=model.Weights(scope='MODEL')
         self.weights=self.PARAM.weights
 
-        self.MODEL = Unet.Unet(name='Unet')
+        #self.MODEL = Unet.Unet(name='Unet')
+        self.MODEL = model.MODEL(name='MODEL')
 
     def construct_model(self):
         self.stop_grad=tf.Variable(True, name='stop_grad', trainable=False)
@@ -52,7 +54,8 @@ class Train(object):
 
             task_outputbs, task_lossesb = [], []
 
-            self.MODEL.forward(inputa, self.weights,self.TASK_BATCH_SIZE,self.HEIGHT,self.WIDTH,train=True)
+            #self.MODEL.forward(inputa, self.weights,self.TASK_BATCH_SIZE,self.HEIGHT,self.WIDTH,train=True)
+            self.MODEL.forward(inputa, self.weights)
             task_outputa = self.MODEL.output
 
             weights = self.MODEL.param
@@ -65,14 +68,16 @@ class Train(object):
             fast_weights = dict(
                 zip(weights.keys(), [weights[key] - self.TASK_LR * gradients[key] for key in weights.keys()]))
 
-            self.MODEL.forward(inputb, fast_weights,self.TASK_BATCH_SIZE,self.HEIGHT,self.WIDTH, train=True)
+            #self.MODEL.forward(inputb, fast_weights,self.TASK_BATCH_SIZE,self.HEIGHT,self.WIDTH, train=True)
+            self.MODEL.forward(inputb, fast_weights)
             output = self.MODEL.output
 
             task_outputbs.append(output)
             task_lossesb.append(loss_func(labelb*(1-maskb), output*(1-maskb)))
 
             for j in range(self.TASK_ITER - 1):
-                self.MODEL.forward(inputa, fast_weights,self.TASK_BATCH_SIZE,self.HEIGHT,self.WIDTH,train=True)
+                #self.MODEL.forward(inputa, fast_weights,self.TASK_BATCH_SIZE,self.HEIGHT,self.WIDTH,train=True)
+                self.MODEL.forward(inputa, fast_weights)
                 output_s = self.MODEL.output
 
                 loss = loss_func(labela*(1-maska), output_s*(1-maska))
@@ -85,7 +90,8 @@ class Train(object):
                                         [fast_weights[key] - self.TASK_LR* gradients[key] for key in
                                          fast_weights.keys()]))
 
-                self.MODEL.forward(inputb, fast_weights,self.TASK_BATCH_SIZE,self.HEIGHT,self.WIDTH,train=True)
+                #self.MODEL.forward(inputb, fast_weights,self.TASK_BATCH_SIZE,self.HEIGHT,self.WIDTH,train=True)
+                self.MODEL.forward(inputb, fast_weights)
                 output=self.MODEL.output
 
                 task_outputbs.append(output)
@@ -143,11 +149,13 @@ class Train(object):
 
 
         self.saver=tf.train.Saver(max_to_keep=100000)
-        pretrain_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='Unet')
+        #pretrain_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='Unet')
+        pretrain_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='MODEL')
         self.loader = tf.train.Saver(var_list=pretrain_vars)
         self.init=tf.global_variables_initializer()
 
-        count_param(scope='Unet')
+        #count_param(scope='Unet')
+        count_param(scope='MODEL')
 
         with tf.Session(config=self.conf) as sess:
             sess.run(self.init)
@@ -163,7 +171,7 @@ class Train(object):
             else:
                 print('==================== No model to load ======================================')
 
-            writer = tf.summary.FileWriter('./logs%d' % self.trial, sess.graph)
+            #writer = tf.summary.FileWriter('./logs%d' % self.trial, sess.graph)
 
             print('[*] Training Starts')
 
@@ -192,8 +200,8 @@ class Train(object):
 
                         print('Iteration:', step, '(Pre, Post) Loss:', lossa_, lossb_, 'Time: %.2f' % (t2 - t1))
 
-                        writer.add_summary(summary, step)
-                        writer.flush()
+                        #writer.add_summary(summary, step)
+                        #writer.flush()
 
                     if step % SAVE_ITER == 0:
                         print_time()

@@ -1,6 +1,6 @@
 import time
-#import model
-import Unet
+import model
+#import Unet
 from imresize import imresize
 from utils import *
 
@@ -26,9 +26,12 @@ class Train(object):
         self.input = tf.placeholder(dtype=tf.float32,shape=[None,None,None,self.CHANNEL])
         self.label = tf.placeholder(dtype=tf.float32,shape=[None,None,None,self.CHANNEL])
 
-        self.MODEL = Unet.Unet('Unet')
-        self.PARAM = Unet.Weights('Unet')
-        self.MODEL.forward(self.input, self.PARAM.weights,self.BATCH_SIZE,self.HEIGHT,self.WIDTH,train=True)
+        #self.MODEL = Unet.Unet('Unet')
+        #self.PARAM = Unet.Weights('Unet')
+        #self.MODEL.forward(self.input, self.PARAM.weights,self.BATCH_SIZE,self.HEIGHT,self.WIDTH,train=True)
+        self.MODEL = model.MODEL('MODEL')
+        self.PARAM = model.Weights('MODEL')
+        self.MODEL.forward(self.input, self.PARAM.weights)
 
     def calc_loss(self):
         self.loss=tf.losses.absolute_difference(self.MODEL.output , self.label)
@@ -73,7 +76,7 @@ class Train(object):
             else:
                 print(" ========== No model to load ===========")
 
-            train_writer = tf.summary.FileWriter('./logs%d' % self.trial, sess.graph)
+            #train_writer = tf.summary.FileWriter('./logs%d' % self.trial, sess.graph)
 
             print('Training Starts')
 
@@ -106,8 +109,8 @@ class Train(object):
 
                         print('Iteration:', step, 'Loss:', loss_, 'LR:', sess.run(self.lr), 'Time: %.2f' % (t2-t1))
 
-                        train_writer.add_summary(summary, step)
-                        train_writer.flush()
+                        #train_writer.add_summary(summary, step)
+                        #train_writer.flush()
 
                     if step % 10000 == 0:
                         save(self.saver, sess, self.checkpoint_dir, self.trial, step)

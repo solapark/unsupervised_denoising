@@ -55,8 +55,9 @@ def generate_TFRecord(label_path,tfrecord_file,patch_h,patch_w,stride):
         noise = torch.zeros(label.shape)
         stdN = np.random.uniform(0, 55, 1).squeeze(-1) # third parameter means batch size (num of images)
         sizeN = noise.shape
-        noise = torch.FloatTensor(sizeN).normal_(mean=0,std=stdN/255.)
+        noise = torch.FloatTensor(sizeN).normal_(mean=0,std=stdN/1.)
         img = label + noise.numpy()
+        img = img.astype(np.uint8)
         print("img shape: {0}, noise.numpy() shape: {1}".format(img.shape,noise.numpy().shape))
 #        assert os.path.basename(img_list[n])[:-6] == os.path.basename(label_list[n])[:-4]
 

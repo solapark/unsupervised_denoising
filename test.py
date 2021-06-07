@@ -106,11 +106,11 @@ class Test(object):
 
 
             if self.iter==0:
-                self.learning_rate=2e-1
+                self.learning_rate=2e-2
             elif self.iter < 4:
-                self.learning_rate=1e-1
+                self.learning_rate=1e-2
             else:
-                self.learning_rate=5e-2
+                self.learning_rate=5e-3
 
             self.train_output = self.forward_backward_pass(self.lr_son, self.hr_father, self.mask_array)
 

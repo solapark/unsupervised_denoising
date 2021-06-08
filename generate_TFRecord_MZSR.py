@@ -90,10 +90,11 @@ if __name__=='__main__':
     parser=ArgumentParser()
     parser.add_argument('--labelpath', dest='labelpath', help='Path to HR images (./DIV2K_train_HR)')
     parser.add_argument('--tfrecord', dest='tfrecord', help='Save path for tfrecord file', default='train_SR_MZSR')
+    parser.add_argument('--patch_size', type=int, default = 512)
     options=parser.parse_args()
 
     labelpath=os.path.join(options.labelpath, '*.png')
     tfrecord_file = options.tfrecord + '.tfrecord'
-    generate_TFRecord(labelpath, tfrecord_file,512,512,120)
+    generate_TFRecord(labelpath, tfrecord_file,options.patch_size,options.patch_size,120)
     print('Done')
 

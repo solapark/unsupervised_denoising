@@ -73,7 +73,7 @@ class Train(object):
             else:
                 print(" ========== No model to load ===========")
 
-            train_writer = tf.summary.FileWriter('./logs%d' % self.trial, sess.graph)
+            #train_writer = tf.summary.FileWriter('./logs%d' % self.trial, sess.graph)
 
             print('Training Starts')
 
@@ -106,8 +106,8 @@ class Train(object):
 
                         print('Iteration:', step, 'Loss:', loss_, 'LR:', sess.run(self.lr), 'Time: %.2f' % (t2-t1))
 
-                        train_writer.add_summary(summary, step)
-                        train_writer.flush()
+                        #train_writer.add_summary(summary, step)
+                        #train_writer.flush()
 
                     if step % 10000 == 0:
                         save(self.saver, sess, self.checkpoint_dir, self.trial, step)

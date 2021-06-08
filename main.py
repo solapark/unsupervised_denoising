@@ -24,7 +24,7 @@ def main():
 
         Trainer()
     else:
-        model_path='SR-gray/Model0/model-50000'
+        model_path=args.model_path
 
         img_path=sorted(glob.glob(os.path.join(args.inputpath, '*.png')))
         gt_path=sorted(glob.glob(os.path.join(args.gtpath, '*.png')))

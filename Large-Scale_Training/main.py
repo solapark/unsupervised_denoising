@@ -14,7 +14,6 @@ CHANNEL = 3
 BATCH_SIZE = 32
 EPOCH = 20000
 LEARNING_RATE = 4e-4
-CHECK_POINT_DIR = 'SR'
 SCALE = 2
 
 def build_parser():
@@ -28,6 +27,10 @@ def build_parser():
     parser.add_argument('--step', type=int,
             dest='global_step', help='Global Step',
             metavar='GLOBAL_STEP', default=0)
+    parser.add_argument('--tfrecord', type=str,
+            help = 'tfrecord path to load')
+    parser.add_argument('--checkpoint', type=str,
+            help = 'checkpoint dir to save')
 
     return parser
 
@@ -38,7 +41,8 @@ def main():
     os.environ['CUDA_VISIBLE_DEVICES'] = options.gpu_num
 
     NUM_OF_DATA = 80324
-    TF_RECORD_PATH=['/data3/sjyang/MZSR+N2V/checkpoint/Large_scale/DIV2K_large_scale.tfrecord']
+    TF_RECORD_PATH=[args.tfrecord]
+    CHECK_POINT_DIR = args.checkpoint
 
     Trainer=train.Train(trial=options.trial,step=options.global_step,size=[HEIGHT,WIDTH,CHANNEL], batch_size=BATCH_SIZE,
                         learning_rate=LEARNING_RATE, max_epoch=EPOCH,tfrecord_path=TF_RECORD_PATH,checkpoint_dir=CHECK_POINT_DIR,

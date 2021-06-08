@@ -12,17 +12,21 @@ parser.add_argument('--gtpath', type=str, dest='gtpath', default='TestSet/Set5/G
 parser.add_argument('--savepath', type=str, dest='savepath', default='results/Set5')
 #parser.add_argument('--model', type=int, dest='model', choices=[0,1,2,3], default=0)
 parser.add_argument('--num', type=int, dest='num_of_adaptation', choices=[1,10], default=1)
+parser.add_argument('--model_path', type=str, help='model path to load')
 
 # For Meta-Training
 parser.add_argument('--trial', type=int, dest='trial', default=0)
 parser.add_argument('--step', type=int, dest='step', default=0)
 parser.add_argument('--train', dest='is_train', default=False, action='store_true')
+parser.add_argument('--lt_wgt', type=str, help='large scale weight')
+parser.add_argument('--tfrecord', type=str, help='tfrecord to load')
+parser.add_argument('--checkpoint', type=str, help='checkpoint dir to save')
 
 args= parser.parse_args()
 
 #Transfer Learning From Pre-trained model.
 IS_TRANSFER = True
-TRANS_MODEL = '../Unet_MZSR/Large-Scale_Training/SR/Model0/model-50000'
+TRANS_MODEL = args.lt_wgt
 
 # Dataset Options
 HEIGHT=64
@@ -41,5 +45,5 @@ TASK_BATCH_SIZE=4
 TASK_LR=1e-2
 
 # Loading tfrecord and saving paths
-TFRECORD_PATH='train_DI_LQ.tfrecord'
-CHECKPOINT_DIR='SR-gray'
+TFRECORD_PATH=args.tfrecord
+CHECKPOINT_DIR=args.checkpoint

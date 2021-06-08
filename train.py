@@ -163,7 +163,7 @@ class Train(object):
             else:
                 print('==================== No model to load ======================================')
 
-            writer = tf.summary.FileWriter('./logs%d' % self.trial, sess.graph)
+            #writer = tf.summary.FileWriter('./logs%d' % self.trial, sess.graph)
 
             print('[*] Training Starts')
 
@@ -192,8 +192,8 @@ class Train(object):
 
                         print('Iteration:', step, '(Pre, Post) Loss:', lossa_, lossb_, 'Time: %.2f' % (t2 - t1))
 
-                        writer.add_summary(summary, step)
-                        writer.flush()
+                        #writer.add_summary(summary, step)
+                        #writer.flush()
 
                     if step % SAVE_ITER == 0:
                         print_time()

@@ -22,7 +22,7 @@ args= parser.parse_args()
 
 #Transfer Learning From Pre-trained model.
 IS_TRANSFER = True
-TRANS_MODEL = '../Unet_MZSR/Large-Scale_Training/SR/Model0/model-50000'
+TRANS_MODEL = '/data3/sap/unsupervised_denoising/checkpoint/Large-Scale_Training/Model0/model-800000'
 
 # Dataset Options
 HEIGHT=64
@@ -37,9 +37,9 @@ META_BATCH_SIZE=5
 META_LR=1e-4
 
 TASK_ITER=5
-TASK_BATCH_SIZE=4
+TASK_BATCH_SIZE=2
 TASK_LR=1e-2
 
 # Loading tfrecord and saving paths
-TFRECORD_PATH='train_DI_LQ.tfrecord'
-CHECKPOINT_DIR='SR-gray'
+TFRECORD_PATH='/data3/sjyang/MZSR+N2V/tfrecord/CBSD_gaussian_nL50.tfrecord'
+CHECKPOINT_DIR='/data3/sjyang/MZSR+N2V/checkpoint/CBSD_gaussian_nL50'

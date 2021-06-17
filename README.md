@@ -25,9 +25,17 @@ Please refer to the folder [**Large-Scale_Training**]
 Download training dataset 
 
 #### Generate TFRecord dataset
-python generate_TFRecord_MZSR.py --labelpath [Path to label images] --tfrecord [TFRecord file path]
+python generate_TFRecord_MZSR.py --labelpath [Path to label images] --tfrecord [TFRecord file path] --noisetype [noisetype(G,PG,MG)] --noise_a [noise_a] --noise_b [noise_b]
 --if you have a problem, change the version of tensorflow 1.8 to tensorflow 1.14 only for generating TFRecord
 
+ex) Gaussian noise
+python generate_TFRecord_MZSR.py --labelpath /data3/sjyang/dataset/CBSD68 --tfrecord /data3/sjyang/MZSR+N2V/tfrecord/CBSD_gaussian_nL25 --noisetype G --noise_a 15
+
+ex) Poisson gaussian noise
+python generate_TFRecord_MZSR.py --labelpath /data3/sjyang/dataset/CBSD68 --tfrecord /data3/sjyang/MZSR+N2V/tfrecord/CBSD_poisson_nL40_10 --noisetype PG --noise_a 40 --noise_b 10
+
+ex) Multivariate gaussian noise
+python generate_TFRecord_MZSR.py --labelpath /data3/sjyang/dataset/CBSD68 --tfrecord /data3/sjyang/MZSR+N2V/tfrecord/CBSD_MG --noisetype MG
 
 #### Train 
 Make sure all configurations in **config.py** are set.

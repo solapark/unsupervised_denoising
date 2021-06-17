@@ -24,7 +24,7 @@ def main():
 
         Trainer()
     else:
-        model_path='SR-gray/Model0/model-50000'
+        model_path='/data3/sjyang/MZSR+N2V/checkpoint/CBSD_poison_nL40_10/Model0/model-55000'
 
         img_path=sorted(glob.glob(os.path.join(args.inputpath, '*.png')))
         gt_path=sorted(glob.glob(os.path.join(args.gtpath, '*.png')))

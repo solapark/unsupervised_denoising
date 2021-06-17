@@ -20,8 +20,8 @@ class dataGenerator(object):
         self.label_train = self.load_tfrecord()
 
     def make_data_tensor(self, sess):
+        #print(self.label_train.shape)
         label_train_=sess.run(self.label_train)
-
         input_meta =[]
         label_meta =[]
         mask_meta =[]
@@ -70,7 +70,7 @@ class dataGenerator(object):
         img = parsed_features['label']
         img = tf.divide(tf.cast(tf.decode_raw(img, tf.uint8), tf.float32), 255.)
        #img = tf.reshape(img, [self.HEIGHT, self.WIDTH, self.CHANNEL])
-        img = tf.reshape(img, [512, 512, self.CHANNEL])
+        img = tf.reshape(img, [96, 96, self.CHANNEL])
         return img
 
 
